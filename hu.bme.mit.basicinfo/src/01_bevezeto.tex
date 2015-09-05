@@ -1,0 +1,302 @@
+A fejezet célja, hogy tisztázzon bizonyos alapfogalmakat. Ezek némelyikéről a tájékozott olvasó már hallott, azonban fontosnak tartjuk egy helyen összefoglalni és tisztázni őket.
+
+\Aref{alapfogalmak}. rész tartalmaz egy rövid bemutatást a gyakran használt számrendszerekről, majd tisztázza az adat és információ fogalmát. Ezt követően elmagyarázza a kettes komplemens számábrázolás működését.
+\Aref{szamitogep_alapok}. rész kitér a számítógép legfontosabb részeire és azok feladataira, illetve bemutatja és példa segítségével szemlélteti egy program végrehajtásának lépéseit. A fejezet végén részletesebben beszél a C programozás nyelv alapjairól is.
+
+%A fejezet célja, hogy tisztázza a programok végrehajtásának alapvető lépéseit. Ennek érdekében ismerteti a szükséges alapfogalmakat, háttérismereteket, és bemutatja, hogy néz ki egy processzor felépítése, és milyen utasítások végrehajtására képes. Emellett röviden kitér a memória és a háttértár működésére is.
+
+% \TODO{kiegészíeni, ha bővül}
+
+\section{Alapfogalmak} 
+\label{alapfogalmak}
+
+Elsőként ismerkedjünk meg néhány alapfogalommal, ami a számítástechnikához és az informatikához kapcsolódik, és gyakran előfordul, illetve ismeretükre jelen jegyzet is épít.
+
+\subsection{Számrendszerek}
+A számrendszerekhez kapcsolódóan elevenítsük fel az alábbi fogalmakat:
+\begin{itemize}
+  \item \textbf{számjegy}: egy szimbólum, ami egy számot ír le. Ugyanahhoz számhoz több szimbólum is tartozhat. Pl. az arab számok között a '3' és a római számoknál a 'III' ugyanazt a mennyiséget jelöli. (v.ö. konkrét és absztrakt szintaxis)
+  %% konkrét - absztrakt szintaxis példa: dolgozatjavításnál pipa jelöli a jó megoldást, de ettől teljesen eltérő jelzést is használhatnánk, aminek a jelentése szintén ugyan az lenne
+  \item a \textbf{számrendszer} vagy \textbf{számábrázolási rendszer}: egységes szabályok alapján meghatározza, hogy számjegyek sorozata milyen számokat jelenít meg.
+  \item \textbf{helyi értékes rendszer}: olyan számrendszer, ahol a számjegyeknek a tényleges értéke a pozíciójától, azaz a helyétől függ. Pl. 8-as számrendszerben $251_{\textcircled{\raisebox{-0.9pt}{\footnotesize{8}}}} =2 \cdot 8^2 + 5 \cdot 8^1 + 1 \cdot 8^0= 169_{\textcircled{\raisebox{-0.9pt}{\footnotesize{10}}}}$. Általában a 10-es számrendszerbeli számok esetén az alsó indexbe írt 10-es elhagyható, azonban fogjuk látni, hogy a kontextusnak megfelelően ez az alapértelmezett \textit{alapszám} más is lehet. 
+  \item egy helyi értékes számrendszer \textbf{alapszám}a megadja, hogy az első hány természetes szám leírására használ szimbólumot (megjegyzés: $0 \in \mathbb{N}$). Pl. a megelőző példában 8-as számrendszerben a $251$ (ejtsd: kettő, öt, egy) számsorozattal ábrázoltuk a tízes számrendszerbeli $169$-et.
+\end{itemize}
+Az informatikában a \textbf{számábrázolás} miatt nagyon gyakran van szükség a \textbf{kettes (bináris)} vagy \textbf{tizenhatos (hexadecimális)} számrendszerbeli reprezentációjára egy számnak, így térjünk ki erre a két esetre alaposabban.
+
+\subsubsection{A bináris számrendszer}
+A számjegyek halmazában csak az első két természetes számot reprezentáló szimbólumok szerepelnek (arab számokkal kifejezve: a $0$ és az $1$). Példa:
+$1111\ 1111_{\textcircled{\raisebox{-0.9pt}{\footnotesize{2}}}} = \sum\limits_{i=0}^7 1 \cdot 2^i = 255$ 
+
+A bináris (kettes) számrendszer jelentőségét az informatika világában az adja, hogy a számítógépeket fizikálisan felépítő digitális áramkörök legalapvetőbb komponensei az információt feszültségszintek formájában kezelik, tárolják. Praktikusnak bizonyult ezeket úgy megválasztani, hogy csupán két értéket (nullánál nagyobb feszültség -- nulla feszültség) különböztessenek meg. Ez nem magától értetődő, a számítástechnika hőskorában például léteztek úgynevezett háromállapotú logikai áramkörök is, amelyek egy pozitív, egy negatív, és egy nulla értéket különböztettek meg, azonban az egyszerűbb tervezhetőség és gyárthatóság miatt végül a kétértékű (bináris) megoldások terjedtek el, tehát a ma használt, modern számítógépek nullákban és egyesekben tudnak ``gondolkodni''. Ezért fontos tehát, hogy mi is kényelmesen tudjunk bánni az így reprezentált számokkal is.
+
+\subsubsection{A hexadecimális számrendszer}
+A kettes számrendszer használata emberként meglehetősen kényelmetlen. Az előbbi példában látható volt, hogy már egy olyan viszonylag kicsi szám, mint a $255$ leírásához is nyolc darab számjegyre volt szükség, és a tízes számrendszerben még kényelmesen kezelhető méretű, négy-öt jegyű számok binárisan tizenöt-húsz jegyűek lesznek. Ilyen hosszú (sok jegyű) számokat fejben tartani vagy leírni nehéz, továbbá nagy az esély a hibázásra, ezért célszerű egy másik, tömörebb írásmódú számrendszert használni helyette.
+
+A tízes számrendszer ebből szempontból megfelelő lenne, a mindennapi életben mondhatni mindenki ezt használja. Azonban számítástechnikai kontextusban nem minden esetben praktikus, mivel nehéz fejben átváltani kettes számrendszerbe (nagyobb számok esetén már kvázi lehetetlen), illetve adott hosszúságú decimális számokhoz különböző hosszúságú bináris számok tartoznak. Például a 255 szám binárisan nyolc számjeggyel ábrázolható, de a 256-hoz már kilencre van szükség. Hasonló probléma, hogy egy decimális szám valamely számjegyét megváltoztatva a bináris reprezentációjában bármely számjegy megváltozhat, és fordítva, egy bináris számjegy valamely számjegyét 1-ről 0-ra, vagy 0-ról 1-re átírva a decimális alakjában több, különböző helyen lévő számjegy változhat. Mint később látni fogjuk, előfordulnak olyan műveletek, amikor bináris számoknak csak bizonyos helyi értékeken álló számjegyeit módosítjuk valamilyen célból, így ez a tulajdonság kifejezetten zavaró lehet.
+
+Azokat a problémákat, amelyek a tízes számrendszer használatát bizonyos esetekben kényelmetlenné teszik, az okozza, hogy a tízes és a kettes számrendszer egyes helyi értékei (illetve helyi érték-intervallumai) nem feleltethetőek meg egyértelműen egymásnak. Ennek az oka pedig az, hogy a két számrendszer alapszáma nem egész számú hatványa egymásnak.
+
+Vizsgáljunk meg egy példán keresztül egy olyan számrendszert, amelynek alapszáma kettő hatvány, legyen ez a 16-os (hexadecimális, röviden hexa, jelölése: 'H') számrendszer:
+
+$$921_{\textcircled{\raisebox{-0.9pt}{\footnotesize{H}}}} = \underbrace{1001}_\text{9}\ \underbrace{0010}_\text{2}\ \underbrace{0001}_\text{1} \hspace*{-2mm}\ _{\textcircled{\raisebox{-0.9pt}{\footnotesize{2}}}}$$
+% be kellett tenni egy vezetőspece-t, ami alá be lehetett tenni a bekarikázott kettest
+Megfigyelhető, hogy a hexadecimális szám egy-egy helyi értékén lévő számjegy értékének egy-egy 4 hosszú tartomány felel meg a bináris alakban felírt szám jegyei közül (ami nem meglepő, hiszen egy négy jegyű bináris szám éppen 16 féle értéket vehet fel), az első négyes csoport értéke éppen 9, a másodiké 2, a harmadiké pedig 1. Ez általánosan is igaz a hexadecimális alakban felírt számokra, ezért elmondható, hogy egy hexadecimális szám valamely számjegyét megváltoztatva a bináris reprezentáció maximum a számjegyhez tartozó négy helyi értékben változhat, illetve egy bináris szám valamely számjegyét megváltoztatva a hexadecimális reprezentációja is pontosan egy számjegyben változik.
+
+Felmerülhet, hogy mi történik, ha például az $1010\ 1111_{\textcircled{\raisebox{-0.9pt}{\footnotesize{2}}}}$ bináris számot próbáljuk felírni hexadecimális alakban. A számjegyek ``alsó'' (kisebb helyi értéken álló) négyes csoportjának az értéke 15, míg a ``felső'' négyesé 10. Egyiket sem tudjuk leírni egyetlen számjeggyel, hiszen a legnagyobb számjegyünk a 9.
+
+Erre a problémára a megoldás egyszerű: új számjegyeket vezetünk be, az angol ABC első betűit szokás erre használni, így a 16-os számrendszerben a következő számjegyeink vannak: $0, 1, 2, 3, 4, 5, 6, 7, 8, 9, \text{A, B, C, D, E, F}$. 
+
+Az előbbi példa: $1010\ 1111_{\textcircled{\raisebox{-0.9pt}{\footnotesize{2}}}}$ így hexadecimálisan a következő alakban írható fel: AF$_{\textcircled{\raisebox{-0.9pt}{\footnotesize{H}}}}$, ezt a gyakorlatban szokás 0xAF vagy HAF-ként is jelölni, a 0x/H előtag teszi egyértelművé, hogy hexadecimális (és nem például decimális) számról van szó.
+
+Természetesen hasonló előnyökkel járhat egyéb, $2$-hatvány alapú számrendszerek (például a $8$-as, azaz oktális) használata is, ebben az esetben három bináris helyi érték feleltethető meg egy oktális helyi értéknek, azonban látni fogjuk, hogy a $8$ jegyű bináris számoknak kiemelt szerepük van az informatikában, ezeket pedig kényelmesebb két jegyű hexadecimális számokként leírni, mint három jegyű, de a legnagyobb helyi értéken már csak bizonyos számjegyeket tartalmazó oktális számokként, így a gyakorlatban a hexadecimális számrendszer fog leginkább előfordulni.
+
+\subsection{Adat és információ fogalma}
+Sokszor az \textbf{adat} és az \textbf{információ} fogalmakat a mindennapokban egymás szinonimájaként alkalmazzák. Ez általánosan nem tehető meg, gyakran fontos a kettő megkülönböztetése:
+\begin{itemize}
+  \item az \textbf{adat} nem feldolgozott, rendezetlen tények összessége, mely konkrét feldolgozás nélkül látszólag értelmetlen. Pl. minden diák testmagassága egy adat.
+  \item az \textbf{információ}hoz vagy \textbf{ismeret}hez jutunk az adatok megfelelő feldolgozásával. Akkor lesz egy adatból információ, ha az a feldolgozás után hasznosnak bizonyul. Pl. az egyénenkénti testmagasságokból kiderül, hogy egy osztályban mi az átlagos magasság.
+\end{itemize}
+
+\subsection{Adattárolási egységek}
+A számítógépeken \textbf{adatok tárolására} van lehetőség, maguk a gépek adatokkal dolgoznak, és ezeken keresztül kommunikálnak. Az adatból információ csak a mi, azaz az emberek értelmezésekor keletkezik.
+
+\begin{itemize}
+  \item A legkisebb adattárolási egység a \textbf{bit}, rövidítve b. Hagyományosan egy bit a 0 vagy 1 értéket veheti fel. Ennek segítségével igen/nem, ki/be, stb. azaz kétértékű állapotokat lehet csupán tárolni.
+  \item Egy \textbf{bájt} (angolul byte, rövidítve B) 8 bitet tartalmaz. Ennek segítségével már $2^8=256$ különböző érték tárolható. Egyetlen bájton már van mód az alap karaktereknek (ASCII karakterek) reprezentálására. Ezek magukba foglalják az angol ABC betűit, a mondat végi és közbeni írásjeleket, valamint alapvető, egyéb karaktereket is. (Megjegyzés: általánosan nem igaz a 8 bit = 1 bájt egyenlőség. Vannak bizonyos, manapság ritkán használt rendszerek, ahol egy bájt 7 vagy 9 bit.)
+  \item A \textbf{kilobájt} (angolul kilobyte, röviden KiB, régen: KB) $2^{10} = 1024$ bájt. A számítástechnika hőskorában néhány kilobájtos méretekben felhasználói programokat, sőt, számítógépes játékokat készítettek. (Megjegyzés: a KB napjainkban kereken $10^3 = 1000$ bájtot jelent).
+  \item A \textbf{megabájt} (angolul megabyte, röviden MiB, régen: MB) $2^{10} = 1024$ KiB. Manapság (2014) egy általános program mérete, a rendelkezésre álló hardver erőforrásoknak köszönhetően néhány MiB-os mérettől a néhány száz, néhány ezer MiB méretig terjed.
+  \item A \textbf{gigabájt} (angolul gigabyte, röviden GiB, régen: GB) $2^{10} = 1024$ MiB. A memóriák, más néven az operatív tárak mérete egy átlagos felhasználó gépében néhány gigabájt.
+  \item A \textbf{terabájt} (angolul terabyte, vagy röviden TiB, régen: TB) $2^{10} = 1024$ GiB. Egyre növekvő háttértár méretek mellett már ezen eszközök méreteit általában terabájtokban mérik. Egy átlagos felhasználó által használt merevlemez mérete néhány terabájt.
+  \item További, egyelőre ritkán használt mértékegységek: petabájt (PiB), exabájt (EiB), zettabájt (ZiB), yottabájt (YiB).
+\end{itemize}
+
+
+\subsection{Gyakori számábrázolási módok}
+A számítógépek a számokat bináris formában tárolják, azaz a hozzájuk kapcsolódó minden szükséges információt (pl. előjel, abszolút érték) valamilyen \textbf{bitsorozat} segítségével fejeznek ki, más szóval ábrázolnak. Ekkor több kérdés is felmerül, mint pl.: Mekkora helyet, azaz hány bitet/bájtot foglaljon el egy szám? Hogyan jelöljük, hogy egy szám negatív, ha csak kettes számrendszerbeli számjegyeket tudjuk erre a célra használni? Hogyan reprezentáljuk a végtelen szakaszos tizedes törteket, illetve az irracionális számokat?
+
+Elsőként az egész számok ábrázolásával foglalkozunk. A teljesség igénye nélkül ennek megoldására néhány bevett módszert említünk meg:
+
+\begin{itemize}
+  \item Előjeles, abszolút értékes
+  \item Egyes komplemens
+  \item NBCD (Natural Binary Coded Decimal)
+  \item Offset
+  \item Kettes komplemens
+\end{itemize}
+
+Ezek közül a legelterjedtebb, és a mai korszerű számítógépeken használt módszer a \textbf{kettes komplemens} számábrázolási mód, a következőkben ennek bemutatása történik.
+
+\subsubsection{Kettes komplemens számábrázolás}
+Egy szám kettes komplemensének előállítását egy példával összekötve mutatjuk be.
+A példában ábrázoljuk 2 bájton a $-3452$-t. Alábbiakban pontokba szedve szerepelnek a szükséges lépések:
+\begin{enumerate}
+  \item Írjuk fel a szám \textbf{abszolút érték}ét bináris formában, ez most 2 bájtot felhasználva: $0000\\ 1101\ 0111\ 1101$
+  \item Vizsgáljuk meg a szám előjelét. 
+  \begin{enumerate}[label=\alph*)]
+    \item Ha a szám \textbf{nem negatív, végeztünk}.
+    \item Ha a szám \textbf{negatív}, akkor a \textbf{bitenkénti negált}ját (azaz 0-ákat 1-esekre, 1-eseket 0-ákra kell lecserélni) kell venni. A példán a negálást végrehajtva a 
+    $1111\ 0010\ 1000\ 0010$ bitsorozatot kapjuk. Ezt követően a 3. lépéssel folytatódik a folyamat.
+  \end{enumerate}
+  
+  \item A kapott szám az úgynevezett 1-es komplemens. Ehhez kell \textbf{1-et hozzáadva} adódik a szám kettes komplemense.
+   
+\end{enumerate}
+ A kettes komplemensben ábrázolt számok legfontosabb jellemzői:
+ \begin{itemize}
+  \item minden számot egyféleképp lehet leírni
+  \item $n$ biten ábrázolható egész számok tartománya a $[-2^{n-1},2^{n-1}-1]$ intervallum
+  \item a legmagasabb helyi értéken szereplő bit értéke jelöli a szám előjelét, ahol 0 jeneti a pozitív számot, 1 pedig a negatív számot
+\end{itemize}
+
+Megjegyzés: kettes komplemens és az offset számábrázolás közötti átváltást a legmagasabb helyi értéken álló bit negálásával végezhetjük.
+
+\section{Számítógép működése, egy program végrehajtása}
+\label{szamitogep_alapok}
+
+\subsection{A számítógép részei}
+Ebben a fejezetben megismerkedünk azokkal a számítógépben található egységekkel, amik működésének ismerete a kurzus során sokban segíti a megértést.
+ 
+\subsubsection{CPU}
+CPU (central processing unit), a köznyelvben processzorként vagy központi feldolgozóegységként szokás hivatkozni rá. Alapvető, elemi utasítások végrehajtására, ezáltal adatok feldolgozására, azokon műveletek végzésére képes. Lásd: \aref{fig:alu}. ábra. Ezeket a műveleteket \textbf{utasításoknak} hívjuk, ezek lehetnek a megszokott matematikai műveletek, de például memória-hozzáférés, vagy az utasítások végrehajtási sorrendjének befolyásolása (például ugrás) is. Azt, hogy egy bizonyos architektúrájú (felépítésű) processzor milyen utasítások végrehajtását támogatja, az architektúrára jellemző \textbf{utasításkészlet} határozza meg, ez az adott architektúra szerint felépülő processzorok által végrehajtható utasítások halmaza.
+
+Egy-egy CPU-architektúrára jellemző a \textbf{szóhossz}, ami azt mondja meg, hogy milyen méretű adategységeket képes \textbf{egy utasítással} kezelni. A ma elterjedt személyi számítógépek processzorai (amik az Intel x86-64 architektúrára épülnek) 64 bites szóhosszal bírnak, a néhány évvel korábbi PC-kben használt processzorok leggyakoribb architektúrája (Intel x86) pedig 32 bites szavakka dolgozott. A széles körben használt okostelefonokba épített, Arm Cortex A5 - Arm Cortex A15 architektúrájú processzorok szóhossza is 32, ám a közeljövőben itt is várható a 64 bites megoldások elterjedése. Egyszerű beágyazott rendszerekben, ahol nincs szükség nagy számítási teljesítményre (például egy mosógép vezérlőelektronikájában, és hasonló helyeken) gyakran 8 bites processzorokat alkalmaznak (amiket már nem CPU-nak, hanem mikrovezérlőnek hívnak) kis fogyasztásuk és alacsony áruk miatt, de a gyártástechnológia fejlődésével itt is terjednek a nagyobb teljesítményű, 32 bites mikrovezérlők. Különösen autóipari beágyazott rendszerekben terjedtek el a 16 bites processzorok. A központi feldolgozóegység főbb részeit (CU, ALU és regiszterek) a következőkben tárgyaljuk.
+
+\begin{figure}[htbc]
+\centering
+\begin{tikzpicture}
+\tikzstyle{register}=[rectangle,align=center,draw,fill=lightgray,inner sep=0.2cm,text width=50mm,text height=5mm]
+\tikzstyle{placeholder}=[rectangle,align=center,draw,fill=white,text height=6mm,color=white]
+\tikzstyle{trapezoid_left}=[trapezium, draw, minimum width=3cm,trapezium left angle=120, trapezium right angle=60]
+\tikzstyle{trapezoid_right}=[trapezium, draw, minimum width=3cm,trapezium right angle=120, trapezium left angle=60]
+\node (reg_felirat) at (2,1){Regiszterek};
+\node (eredmeny_felirat) at (2,-8){Eredmény};
+\draw[-angle 45,thick] (2,-6.5)--(eredmeny_felirat);
+\node[placeholder] (reg4_1)  at (1,-3){};
+\node[placeholder] (reg4_2)  at (3,-3){};
+\node[register] (reg1) at (2,0){};
+\node[register] (reg2)  at (2,-0.9){};
+\node[register] (reg3) at (2,-1.8){};
+\node[register] (reg4)  at (2,-2.7){};
+\node[trapezoid_left] (alu1) at (1,-6) {};
+\node[trapezoid_right] (alu2) at (3,-6) {};
+\node[placeholder] at (2,-6.254) {ALU};
+\node (operandus2)  at (4.2,-4.5){Operandus 2};
+\node (operandus1)  at (-0.2,-4.5){Operandus 1};
+\node (ALU) at (2,-6.27){ALU};
+\node (opcode) at (6,-6){Utasítás kód};
+
+
+\tikzstyle{vecArrow} = [thick, decoration={markings,mark=at position
+   1 with {\arrow[semithick]{open triangle 60}}},
+   double distance=1.4pt, shorten >= 5.5pt,
+   preaction = {decorate},
+   postaction = {draw,line width=1.4pt, white,shorten >= 4.5pt}]
+
+  \draw[vecArrow] (reg4_1) to (alu1);
+  \draw[vecArrow] (reg4_2) to (alu2); 
+  \draw[vecArrow] (opcode) to (4.1,-6); 
+
+\draw[-angle 45,thick](2,-7)--(-2,-7)--(-2,-0.9)--(reg2);
+
+\end{tikzpicture}
+\caption{Egy utasítás végrehajtásának vázlata}
+\label{fig:alu}
+\end{figure}
+
+\paragraph{Arithmetic Logic Unit (ALU)} Aritmetikai és Logikai Egység, azaz a processzor műveletvégző egysége. Egyszerű, aritmetikai (összeadás, szorzás, stb\ldots), logikai (ÉS, VAGY, stb\ldots) műveletek elvégzésére alkalmas logikai áramkör. Egy ALU jellemzően egyszerre egy műveletet képes elvégezni, jellemzően maximum két operandussal (bemenő értékkel). Az operandusok mellett szüksége van arra az információra is, hogy milyen műveletet kell elvégeznie az operandus(ok)on, ami szintén egy bináris kódként kap meg, ez az utasítás kód, angolul operation code (OpCode). Az ALU-nak kimenete egyrészt az elvégzett művelet eredménye, illetve emellett még beállít úgynevezett Flag-eket (a processzorban lévő, egy bites értékeket tároló egységek), amikkel jelezheti például, hogy az elvégzett művelet eredménye nagyobb, mint a processzor által kezelhető maximális méretű szám (azaz ``túlcsordul''), vagy éppen nulla. A Flag-ek beállítása azért fontos, mert az utasítások egy része eltérő módon viselkedik a Flag-ek értékének függvényében, így megvalósíthatóak például feltételes ugrások. Azt, hogy az ALU mekkora méretű adatokon tud műveleteket végezni, a CPU szóhossza határozza meg.
+  \paragraph{Regiszterek} a CPU-n belül adattárolásra alkalmasak. Méretük általában megegyezik a processzor szóhosszával, és viszonylag kevés (nagyságrendileg maximum néhányszor tíz darab) található belőlük egy CPU-ban, pontos számuk a konkrét architektúrától függ. Jelentőségük abban áll, hogy a bennük tárolt adatok nagyon gyorsan (jó közelítéssel azonnal) elérhetőek, ellentétben az operatív memóriában, vagy a háttértáron tárolt adatokkal. Ennek következtében az ALU egy-egy művelet operandusait jellemzően egy-egy regiszterből veszi, illetve a művelet eredménye is egy regiszterbe íródik be (később látható lesz, hogy erre vannak egyéb megoldások, de az alapelv a legtöbb architektúra esetén azonos). Ha azt szeretnénk, hogy a processzor egy operatív memóriában lévő adategységen végezzen műveletet, akkor azt először be kell másolnia egy regiszterbe (amire rendelkezésre áll egy vagy több külön utasítás), majd ez után a regiszterbe lévő adaton végrehajtható a kívánt utasítás (például egy összeadás). Ha szükséges, a művelet eredményét szintén egy külön utasítással írhatjuk ki az eredmény-regiszterből az operatív memóriába. Egy speciális regiszter a \textbf{programszámláló} a következő végrehajtandó utasítás memóriacímét tárolja. Gyakran egy kijelölt regiszter felelős a Flag-ek tárolásáért is, ilyenkor ennek egyes bitjei külön-külön értelmezendőek. 
+  \paragraph{Control Unit (CU)}, azaz vezérlőegység. Feladata az egyes utasítások végrehajtása során a többi komponens vezérlése, ennek megfelelően felolvassa a soron következő utasítást az operatív memóriából, megállapítja, hogy \emph{mit} kell csinálni (ha aritmetikai művelet, akkor ez lesz az ALU által megkapott OpCode), mik a paraméterek (ha vannak), azaz mely regiszterek értékét kell az ALU-nak felhasználnia operandusként, és hova (melyik regiszterbe) kerüljön az eredmény, ha van. Ha nem olyan utasításról van szó, amelyek az ALU hajt végre, hanem például memóriába írásról van szó, vezérli az ezt végrehajtó egységet is. Az utasítások végrehajtása végén növeli a programszámláló értékét, így a processzor az egyes utasításokat szekvenciálisan (sorban, egymás után) hajtja végre (lehetőség van azonban a programszámláló értékét egyéb módon is állítani, így befolyásolni az utasítások végrehajtásának sorrendjét, például létezik olyan utasítás, ami a programszámláló-regiszterbe ír egy értéket, az ilyen utasítást \textbf{ugró utasításnak} nevezzük).
+
+\subsubsection{Memória}
+Az (operatív) memória, amit szokás RAM-nak is nevezni (bár ez alapvetően mást jelent) a program által a futása során felhasznált adatok tárolására szolgáló egység. Ide tartoznak olyan adatok, amiken műveleteket kell végezni és a műveletek eredményei is, hiszen a processzorok regiszterkészletének mérete korlátos, egyáltalán nem biztos, hogy az összes, futás során szükséges adat elfér benne. Ugyanakkor lehet, hogy bizonyos adatokra csak a futás eltérő szakaszaiban van szükség, így nem is fontos minden adatot folyamatosan regiszterekben tárolni.
+
+A számítógép az operatív memóriában az adatokat ``ömlesztve", különösebb struktúra nélkül tárolja, így az egyes adategységeket \textbf{memóriacímük} segítségével érhetjük el. A memóriacím egy pozitív egész szám, egy memóriában tárolt adategység (bájt) címe annyi, ahányadik bájt azt tárolja a memóriában. Természetesen gyakran használunk egy bájtnál nagyobb adategységeket is, ezeket az első bájtjuk címével, azaz \textbf{kezdőcímükkel} és \textbf{méretükkel} szokás címezni. 
+
+
+Illusztrációképp szerepel \aref{memorydump}. ábrán egy alkalmas program segítségével megjelenített memóriatartalom. Az első oszlopban látható a sorok kezdőcíme, ezt követi 18 bájtnyi adat, majd a tárolt értékeknek megfelelő ASCII karakterek láthatók.
+ 
+Fontos megjegyezni, hogy gyakran nem minden memóriacímhez tartozik fizikai memória, mivel a memóriacímek tetszőleges, a processzor szóhosszán ábrázolható nem negatív egész számok lehetnek, míg a számítógépekbe beépített fizikai memória mennyisége változhat, és jellemzően kisebb, mint a címtartomány mérete. Ez különösebb problémát nem okoz, mert az általunk tárgyalt esetekben az operációs rendszer végzi a memória kiosztását az egyes programok között, és gondoskodik róla, hogy azok csak megfelelő memóriacímeket használhassanak.
+%\usepackage{graphics} is needed for \includegraphics
+\begin{figure}[htp] 
+\begin{center}
+  \includegraphics[scale=0.5]{figures/memory_dump.png}
+  \caption[Egy memóriakép]{Egy megjelenített memóriatartalom}
+  \label{memorydump}
+\end{center}
+\end{figure}
+
+% Memória használata: \TODO{}
+
+\subsubsection{Háttértár}
+A memóriáktól eltérően a háttértárak célja nagymennyiségű \textbf{adat tárolása}. Napjaink asztali számítógépeiben használt háttértárak tipikusan merevlemezek (más néven winchester, hard disk drive, rövidítve HDD) vagy SSD-k (solid state drive). Jellemzőjük a -- memóriákhoz viszonyított -- nagy méret és lassúság illetve az, hogy akkor is megőrzik az adatokat, ha számítógépet kikapcsoljuk/áramtalanítjuk. 
+
+
+Egy HDD-n tárolt adat elérési ideje a memóriába már betöltött adatéhoz hasonlítva több nagyságrenddel is elmarad. (Számokkal illusztrálva: memóriábol olvasni kb. 0.7 ns, míg a háttértárról kb. 10 ms!) Ennek oka a hardver sajátosságában keresendő: egy winchester belsejében forgó lemezek hordozzák fizikailag az adatokat, és őket pásztázó fejek segítségével lehet írni vagy olvasni azokat. Ennek kompenzálására ezek az eszközök nem bájtonként címezhetők, hanem nagyobb egységeket kezelve úgynevezett \textbf{blokkos elérést} biztosítanak. Egy blokk mérete általában 4 KB és 1 MB közé esik, így valójában egy olvasással egyszerre több adathozzáférést is végrehajt, ezzel csökkentve az átlagos olvasási időt.
+ 
+A manapság egyre terjedő SSD-k esetén az adathozzáférési idő kb. 0.1 ms. Ezek az eszközök nem tartalmaznak mozgó alkatrészeket, csupán a bennük található áramkörök jellemzői határozzák meg ezt a sebességet.
+
+
+Fontos megjegyezni, hogy háttértáron tárolt adatokon közvetlen nem lehet műveleteket végrehajtani, előbb a szükséges részek memóriába helyezése szükséges.
+
+
+\subsection{Gépi kód} 
+A processzor által futtatott programot is a memóriában tároljuk, ennek megfelelően szintén binárisan kell reprezentálni, méghozzá úgy, hogy a processzor (azon belül is a Control Unit) ezt közvetlenül értelmezni tudja. A gyakorlatban ez azt jelenti, hogy az egyes utasításokat tároljuk binárisan kódolva, egymás után a memóriában. A processzor a programszámláló által mutatott helyről olvassa be az egyes utasításokat, majd végrehajtja őket (és természetesen közben a programszámláló értéke is változik). 
+
+Sajnos annak, hogy a processzor által könnyen értelmezhető formában tároljuk a programot (azaz a végrehajtandó utasításokat) az az ára, hogy ezek ebben a formában egy ember számára nehezen értelmezhetőek, hiszen 1-esek és 0-k sorozatáról van szó. Az első részük jellemzően az utasítás kódját (OpCode) tárolja, majd további számjegyek kódolják a hozzá tartozó egyes paramétereket, amik lehetnek számok, vagy regiszterek kódjai. Az informatika hőskorában a programozók ilyen formában dolgoztak, közvetlenül gépi kódot írtak, ám ez nagyon lassú és nehézkes módszernek bizonyult (táblázatokból kellett kiolvasni a különféle utasításokhoz tartozó bináris számokat).
+
+Ennek eredményeként hamar megoldást találtak a programkódok (ember által) könnyebben olvasható reprezentációjára, így ma már gyakorlatilag senkinek nem kell kézzel gépi kódot írnia.
+
+\subsection{Assembly} 
+
+Az első lépés a programkódok olvashatóbbá tételének irányába az Assembly nyelv bevezetése volt. Ez egy nagyon egyszerű megoldás, csupán arról van szó, hogy az egyes utasítások OpCode-ját valamilyen, a funkciójukra utaló, 2-4 betűs betűkóddal (mnemonic), a paraméterek esetében pedig a regiszterek kódját szintén valamilyen rövid névvel helyettesítjük (ha a paraméter értéke számként értelmezendő, a számot közvetlenül leírhatjuk).
+
+Az alábbiakban szerepel egy egyszerű Assembly példakód, melyről feltételezhetjük hogy egy nagyobb program részlete:
+% \TODO{esetleg labelekrol irni}
+\asmlisting
+\lstinputlisting {codeexamples/asmexample.asm}
+
+A példa első sorában egy úgynevezett \textbf{címke} szerepel, aminek a jelentősége, hogy ennek segítségével lehet a program meghatározott pontjaira hivatkozni. Ez tulajdonképpen egy memóriacímet jelent, leginkább a programozót segíti az olvashatóság javításával.
+
+
+A második sorban egy \textbf{mozgatás} utasítás áll, mely betölti a 45 számértéket az \texttt{ax} regiszterbe.
+
+
+A harmadik sorban egy \textbf{összeadás} szerepel. Az \texttt{ax} regiszterben szereplő 45-höz hozzáadja a \texttt{bx} regiszter tartalmát. Ekkor a két operandus közül az első felülíródik és ebbe kerül be az eredmény.
+
+A negyedik sorban egy \textbf{összehasonlítás}t végzünk, ahol a kapott összegre vizsgáljuk, hogy milyen viszonyban áll a 100 konstanssal. Ez az utasítás beállít és kitöröl bizonyos flag-eket az összehasonlítás eredményének megfelelően. 
+ 
+Végül az ötödik sorban az összehasonlítás eredményét felhasználva \textbf{ugrást} hajtunk végre a kódban az eleje: címkével ellátott pontra, ha az \texttt{ax}-ben tárolt érték nagyobb vagy egyenlő mint 100.
+ 
+
+Megfigyelhető, hogy a leírt kód információtartalma megegyezik a gépi kódéval, továbbra is egyenként, egymás után írjuk a processzor által végrehajtandó utasításokat, a különbség az, hogy valamivel könnyebben olvasható lesz a kód.
+
+Annak, hogy az Assembly kód nagyon közel áll a gépi kódhoz, az az előnye, hogy nagyon könnyű gépi kódot előállítani belőle, egy igen egyszerű program (amit \textbf{Assembler}-nek hívunk) képes erre. Ebből következik, hogy ez a megoldás már az informatika fejlődésének korai szakaszában megjelent, nagyon sokáig ilyen formában íródtak a programok.
+
+Mivel az Assembly-utasítások egyértelműen megfeleltethetőek a processzor gépi utasításainak, fontos megjegyezni, hogy mivel az egyes processzorarchitektúrák eltérő utasítások végrehajtását támogatják, \emph{nem létezik egységes Assembly nyelv, hanem az egyes architektúráknak van Assembly-nyelve}, amelyek természetesen hasonlítanak egymásra, de nem azonosak.
+
+Sajnos nagyobb, bonyolultabb programok fejlesztésénél az Assembly-kód gyorsan áttekinthetetlenné válik, ezért manapság nem igazán használjuk, a helyét magasabb szintű nyelvek vették át. Vannak azonban esetek, amikor nagyon fontos az elkészített program mérete és hatékonysága (vagy azért, mert egy nagyon egyszerű, kis teljesítményű eszközre fejlesztünk, vagy épp ellenkezőleg, nagyon gyors működést várunk el), ilyenkor még manapság is szokás a kódot (vagy inkább annak kritikus részeit) Assembly nyelven írni, mivel így tudjuk a legközvetlenebbül befolyásolni a processzor működését.
+
+ 
+
+\subsection{Magas szintű nyelvek}
+
+\subsubsection{Motiváció}
+
+Az Assembly nyelvek használata ugyan megoldotta a gépi kód ember számára nehéz olvashatóságának problémáját, azonban a programok egyre növekvő komplexitására nem jelentett igazi megoldást. Az Assembly kód a legtöbb esetben túlságosan közvetlenül írja le a programunk működését, hiszen explicite meg kell adnunk az egyes utasításokat, azok pontos paraméterezésével együtt, ugyanakkor a programozó számára például gyakran nem fontos, hogy egy művelet eredménye melyik regiszterbe kerül, vagy egyáltalán regiszterbe kerül-e, esetleg az operatív memóriába, illetve ha a memóriába kerül, akkor pontosan hova (milyen címre), így könnyű ``elveszni a részletekben''.
+
+Hasznos lenne egy olyan nyelvet használni, amiben a programokat absztraktabb, azaz elvontabb módon, tömörebben, lényegre törőbben írhatnánk le, csak a működés szempontjából lényeges dolgokkal kellene foglalkoznunk a programok írása közben. Ezzel együtt pedig rövidebb, áttekinthetőbb, és jobban strukturált (így később sokkal könnyebben megérthető, karbantartható) kódot kaphatnánk. 
+
+A C, illetve az ennek bázisán kifejlesztett C++ nyelv ilyen, úgynevezett \textbf{magas szintű nyelv}.
+Fontos megjegyezni, hogy \emph{egy programozási nyelv ``magas szintű'', vagy ``alacsony szintű'' mivolta erősen kontextus függő}. Az Assembly-hez képest a C nyelv például magas szintűnek tekinthető, mivel sokkal absztraktabb módon, a hardver sajátosságaival kevésbé foglalkozva írható le benne egy adott program, ugyanakkor léteznek a C-nél ``magasabb szintű'' nyelvek is, amik még absztraktabb leírást tesznek lehetővé, még jobban elfedik a hardveres megvalósítás részleteit. Ilyen például a Java nyelv, így a Java és a C kontextusában vizsgálva a C alacsony szintű nyelvnek számít, míg a Java magas szintűnek. A C++-t általában valamivel magasabb szintű nyelvnek szokás tekinteni, mint a C-t, de alacsonyabb szintűnek, mint a Java-t. Látható, hogy ezek a fogalmak nem teljesen egzaktak, mi a továbbiakban a C-re és a C++-ra is mint magas szintű nyelvre fogunk hivatkozni.
+
+\subsubsection{Fordító}
+Sajnálatos módon annak, hogy a programunkat egy magas szintű nyelven írjuk le, hátránya is van. Az Assemblytől eltérően (ami gyakorlatilag a gépi kódnak az olvashatóbb alakban leírását jelenti) egy magas szintű, például C nyelvű \textbf{forráskód} szemantikailag (jelentésében) nagyon távol állhat az általa leírt funkciót megvalósító gépi kódtól. 
+A gépi kód (ahogy az Assembly is) a processzor által végrehajtható utasításokat tartalmaz egymás után, míg egy magasabb szintű forráskód jellemzően bonyolultabb (csak több gépi utasítással megvalósítható) műveleteket, vezérlési szerkezeteket, illetve függvényhívásokat (ezekre részletesebben később fogunk kitérni).
+Ez azzal jár, hogy a forráskódból gépi kódot előállítani messze nem olyan egyszerű feladat, mint az Assembly nyelvnél, sokkal bonyolultabb, több logikát tartalmazó szoftver szükséges hozzá.
+
+\textbf{Fordítónak} (compiler) nevezzük azokat a programokat, amik valamilyen magas szintű forráskódból alacsonyabb szintű, jellemzően (de nem mindig) gépi kódot állítanak elő, magát a folyamatot pedig fordításnak. A fordítás általában nem egyértelmű folyamat, egy bizonyos forráskódból több, funkcionálisan azonos (azaz ``ugyanazt csináló''), de különböző gépi kód is előállítható, hiszen egy absztrakt módon megfogalmazott műveletet adott esetben több, eltérő utasítássorozat is megvalósíthat. Azt, hogy a fordító egy bizonyos esetben pontosan milyen gépi kódot állít elő, közvetlenül ugyan nem határozhatjuk meg (lássuk be, pont azért használunk valamilyen magas szintű nyelvet, mert nem szeretnénk ilyesmivel foglalkozni), ugyanakkor közvetett módon befolyásolhatjuk, megmondhatjuk például a fordítónak, hogy gyorsan működő kódot szeretnénk (futási időre optimalizálás), vagy inkább kevés utasításból állót (kód méretére optimalizálás), esetleg kevés memóriát felhasználót (memóriahasználatra optimalizálás), a fordító pedig igyekszik a lehetőségeihez mérten ilyen gépi kódot létrehozni.
+
+Az Assembly-hez képest komoly különbség a magasabb szintű nyelvek esetén, hogy ezek szabványosak, tehát (mivel a cél a hardverfüggő részletek elfedése) a forráskód szintaktikája (lásd később) nem függ attól, hogy a belőle fordított gépi kódot milyen processzorarchitektúrán fogjuk futtatni, így nincs szó például C nyelvekről, csak C nyelvről. Ha különböző processzorarchitektúrákon szeretnénk egy bizonyos forráskódból készült gépi kódot futtatni, akkor nyilvánvalóan különböző gépi kódra van szükségünk, erre általában az a megoldás, hogy az egyes architektúrákra különböző fordítóprogramokkal fordítjuk le a forráskódot.
+
+Az idő előrehaladtával a fordítóprogramok folyamatosan fejlődnek, egyre intelligensebbek lesznek, egyre hatékonyabb gépi kódot lesznek képesek előállítani. Korábban gyakran szükség volt a teljesítménykritikus kódrészletek Assembly-ben történő megírására, ma már néhány igen szélsőséges esettől eltekintve a fordítók jobb minőségű (hatékonyabb) gépi kódot tudnak előállítani, mint egy hozzáértő programozó Assembly-ben, így erre ritkán van szükség.
+
+Megjegyzés: a magas szintű nyelven megírt programok futtatására nem az egyetlen megoldás a fordítóval gépi kódú program előállítása, majd annak futtatása. Léteznek úgynevezett \textbf{interpretált nyelvek}, amelyeket nem fordítunk gépi kóddá, hanem egy \textbf{interpreter} (értelmező) nevű program sorról sorra feldolgozza (``értelmezi'') a forráskódot, és az egyes utasításokat rögtön végre is hajtja. Ilyen nyelv például a régen oktatási célra igen elterjedt, ma már ritkán használt BASIC. Általában elmondható, hogy egy interpretált nyelven megírt program az interpreter folyamatos működése miatt kisebb teljesítményű (lassabb) lesz, mint ha egy fordítható nyelven írnánk meg, bináris gépi kóddá fordítanánk és azt közvetlenül futtatnánk, ezért általános programozási nyelvként ezek gyakorlatilag kiszorultak, azonban léteznek olyan speciális alkalmazási területek, amikor alkalmazunk interpretereket.
+
+\subsubsection{Szintaktika} 
+A programozási nyelvek -- akárcsak a természetes nyelvek -- rendelkeznek szintaxissal, azaz nyelvtannal, nyelvtani szabályokkal. Két részre bontható fel:
+\begin{itemize}
+  \item \textbf{absztrakt szintaxis}: definiálja, hogy mit képes a nyelv kifejezni
+  \item \textbf{konkrét szintaxis}: meghatározza, hogy az egyes nyelvi elemeket hogyan kell jelölni 
+\end{itemize}
+
+A C nyelvet felhasználva egy konkrét példán keresztül mutatjuk be, mit is jelent ez a két fogalom. Tegyük fel, hogy egy olyan egyszerű programot készítünk, ami megszámolja, hogy hány szóköz karakter van egy szövegben. Ekkor szükségünk van egy \emph{egész szám}ra, amivel ezt az értéket reprezentálni tudjuk. Az alábbi C nyelvű kódsort leírva fejezhetjük ki, hogy legyen egy \texttt{szokozokSzama} nevű egész számunk.
+
+\clisting
+\lstinputlisting{codeexamples/declaration.c}
+A példában az absztrakt szintaxis teszi lehetővé, hogy egész számokat tudjunk leírni. A kapcsolódó konkrét szintaxis pedig a fenti kódsor. Ennek részei:
+\begin{itemize}
+  \item az \texttt{int} kulcsszó, mert ezzel jelöljük, hogy egy egész számot (integer) szeretnénk tárolni
+  \item a neve, ami most \texttt{szokozokSzama}
+  \item a sorvégi \texttt{;} karakter, mivel a nyelvtani szabályok előírják, hogy minden egyes utasítást ezzel kell lezárni
+\end{itemize}
+
+
+\subsubsection{C nyelv}
+A C nyelvet 1969 és 1973 között fejlesztették ki az Egyesült Államokban, az ATT Bell Labs-nál. Azóta minden idők legszélesebb körben használt programozási nyelve lett, a legkisebb mikrovezérlőktől a legnagyobb szuperszámítógépekig futtathatunk C nyelven írt programokat, köszönhetően annak, hogy rengeteg féle processzorarchitektúrához készült C fordító.
+
+A ma használt modernebb (és magasabb szintű) nyelvekhez képest valamivel közvetlenebb kontrollt enged meg a hardver felett és ezért általános célú, PC-s alkalmazásokat már viszonylag ritkán szokás C-ben írni, de ettől még igen elterjedt például beágyazott rendszerekben, vagy olyan, teljesítménykritikus szoftvereknél, mint a különféle hardverek illesztőprogramjai (driverek).
+
+Ezen tulajdonsága miatt különösen alkalmas a programozás oktatására is, nem véletlen, hogy mi is ezt (illetve bizonyos esetekben a C++-t, de mint később látni fogjuk, ez nem jelent nagy különbséget) választottuk a gyakorlati példáinkhoz. 
+
+
+
+\subsubsection{C++ nyelv}
+Bjarne Stroustrup dán informatikus tervezte 1983-ban, azóta rengeteg, egyre modernebb szabványa jött létre. Az előzőekben röviden bemutatott C nyelv hiányosságait és kényelmetlen megoldásait igyekszik orvosolni. Egy nyelv problémái például az alábbiakból adódhatnak:
+\begin{itemize}
+  \item szintaxis bonyolultsága, kényelmetlen használata
+  \item hiányos elemkészlet
+  \item hatékonysági kérdések
+  \item programozási irányelvek (paradigmák) támogatása
+\end{itemize}
+
+Távolról szemlélve, pár kivételtől eltekintve igaz, hogy a C nyelv egy részhalmazát képezi a C++-nak. Ez utóbbiról elmondható, hogy modernebb nyelvi elemeket és megoldásokat ad a C-hez, azonban ez valamelyest csökkenti a teljesítményét a belőle lefordított kódnak. Sok alkalmazási területen viszont a C++ kínálta eszközkészletért nem nagy ár az ezzel vesztett teljesítmény. Későbbiekben ezek közül a különbségek közül néhánnyal részletesebben foglalkozunk.

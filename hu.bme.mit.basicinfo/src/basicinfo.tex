@@ -1,0 +1,146 @@
+\documentclass[11pt,a4paper,oneside]{report}             % Single-side
+% \documentclass[11pt,a4paper,twoside,openright]{report}  % Duplex
+
+%--------------------------------------------------------------------------------------
+% Used packages
+%--------------------------------------------------------------------------------------
+
+%\PassOptionsToPackage{chapternumber=Huordinal}{magyar.ldf}
+\usepackage[utf8]{inputenc}
+\usepackage{ae}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumerate}
+\usepackage[thmmarks]{ntheorem}
+\usepackage{graphics} 
+\usepackage{epsfig} 
+\usepackage{listings}
+\usepackage{color}
+%\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{anysize}
+\usepackage[magyar]{babel}
+\usepackage{sectsty}
+\usepackage{setspace}  % Ettol a tablazatok, abrak, labjegyzetek maradnak 1-es sorkozzel!
+\usepackage[hang]{caption}
+\usepackage{hyperref}
+\usepackage{cmap}
+\usepackage{lmodern}
+\usepackage{adjustbox}
+\usepackage{enumitem}% http://ctan.org/pkg/enumitem
+%\usepackage{showframe}% http://ctan.org/pkg/showframe
+% \usepackage{rotating}
+\usepackage{pdflscape}
+\usepackage{listings}
+\usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
+
+% Rajzoláshoz
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usetikzlibrary{arrows, decorations.markings}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=0.2pt] (char) {#1};}}
+\usetikzlibrary{arrows,shapes,snakes}
+
+
+
+
+%--------------------------------------------------------------------------------------
+%	Some new commands and declarations
+%--------------------------------------------------------------------------------------
+\newcommand{\code}[1]{{\upshape\ttfamily\scriptsize\indent #1}}
+\newcommand{\TODO}[1]{{\textcolor{red}{{\LARGE TODO} #1}}}
+\newcommand{\kep}[4]{
+	\begin{figure}[!ht]
+		\centering
+		\begin{adjustbox}{max size={\textwidth}{\textheight}}
+			\includegraphics[scale=#4]{#1}
+		\end{adjustbox}
+		\caption{#2} 
+		\label{#3}
+	\end{figure}
+	}
+ 
+\definecolor{verylightgray}{rgb}{0.95,0.95,0.95}
+\definecolor{commentgreen}{rgb}{0,0.6,0}
+% \newcommand{\clisting}{\lstset{language=[ISO]C++,%
+\newcommand{\clisting}{\lstset{language=C,%
+    %basicstyle=\color{red},
+    basicstyle=\footnotesize\ttfamily,
+    columns=fullflexible,
+    backgroundcolor = \color{verylightgray},
+    breaklines=true,%
+%     morekeywords={matlab2tikz},
+    keywordstyle=\color{blue},%
+    morekeywords=[2]{1}, keywordstyle=[2]{\color{black}},
+    identifierstyle=\color{black},%
+    stringstyle=\color{purple},
+    commentstyle=\color{commentgreen},%
+    showstringspaces=false,%without this there will be a symbol in the places where there is a space
+    numbers=left,%
+    numberstyle={\tiny \color{black}},% size of the numbers
+    numbersep=9pt, % this defines how far the numbers are from the text
+    emph=[1]{},emphstyle=[1]\color{red} %some words to emphasise
+    %emph=[2]{word1,word2}, emphstyle=[2]{style},    
+}} 
+\newcommand{\asmlisting}{\lstset{language={[x86masm]Assembler},%
+    %basicstyle=\color{red},
+    basicstyle=\footnotesize\ttfamily,
+    columns=fullflexible,
+    backgroundcolor = \color{verylightgray},
+    breaklines=true,%
+%     morekeywords={matlab2tikz}, 
+    keywordstyle=\color{blue},%
+    morekeywords=[2]{1}, keywordstyle=[2]{\color{black}},
+    identifierstyle=\color{black},%
+    stringstyle=\color{purple},
+    commentstyle=\color{commentgreen},%
+    showstringspaces=false,%without this there will be a symbol in the places where there is a space
+    numbers=left,%
+    numberstyle={\tiny \color{black}},% size of the numbers
+    numbersep=9pt, % this defines how far the numbers are from the text
+    emph=[1]{ax,bx},emphstyle=[1]\color{red}, %some words to emphasise
+    emph=[2]{eleje},emphstyle=[2]\color{purple} %some words to emphasise
+    %emph=[2]{word1,word2}, emphstyle=[2]{style},    
+}}
+
+
+
+
+%--------------------------------------------------------------------------------------
+% Table of contents and the main text
+%--------------------------------------------------------------------------------------
+\frenchspacing
+\begin{document}
+
+\title{BasicInfo jegyzet}
+\maketitle
+
+\tableofcontents
+
+\pagenumbering{arabic}
+
+\chapter*{A kurzus céljai}
+Manapság (2014) hatalmas szerepet tölt be az informatika a mindennapos életben. Térhódítása egyre folytatódik, de sokan továbbra is csak mágikus dobozként és valami ismeretlen folyamatként tekintenek az okostelefonokra, számítógépekre, illetve a rajtuk futó programokra. Egy átlagos felnövekvő középiskolás, ha csak ő maga nem tesz ellene, ugyanazt a hiányos képet kialakítja ki magában ezekről az eszközökről, mint az idősebb generáció jelentős hányada.
+
+Ennek a gyakorlatorientált kurzusnak a célja, hogy segítse az érdeklődő gimnazistákat megismertetni a személyi számítógép működésének és programozásának alapjaival és hátterével. A tananyag összefoglalja a legalapvetőbb és legfontosabb ismereteket az alábbiakkal kapcsolatban:
+\begin{itemize}
+  \item processzor működése, elvégezhető műveletek
+  \item gépi kód és programvégrehajtás
+  \item a C/C++ nyelv alapjai
+  \item alapvető programozási módszerek
+  \item algoritmizálási feladatok
+\end{itemize}
+A felsorolt részekkel ezen jegyzet nem egyforma mértékben foglalkozik, mivel igyekszik a kurzus alatt megszerzett ismeretek gyakorlati használhatóságát maximalizálni. A tanmenet összeállítása adaptív a hallgatók igényeinek megfelelően, így várható, hogy gyakran módosul. A jelenlegi változat utolsó módosításának dátuma: \today
+
+
+\chapter{Számítástechnikai alapismeretek}
+\label{01_bevezeto}
+\input{01_bevezeto} 
+
+\chapter{A C nyelv}
+\label{02_c_nyelv}
+\input{02_c_nyelv} 
+
+
+\end{document}
